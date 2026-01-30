@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Organization {
+  id String @id @default(uuid())
+  name String
+
+  divisions Division[]
+  employees Employee[]
+}
+
+model Division {
+  id String @id @default(uuid())
+  name String
+
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  subdivisions Subdivision[]
+  employees Employee[]
+}
+
+model Subdivision {
+  id String @id @default(uuid())
+  name String
+
+  divisionId String
+  division Division @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+
+  employees Employee[]
+}
+
+model Type {
+  id String @id @default(uuid())
+  name String
+
+  grades Grade[]
+}
+
+model Grade {
+  id String @id @default(uuid())
+  name String
+
+  typeId String
+  type Type @relation(fields: [typeId], references: [id], onDelete: Cascade)
+
+  employees Employee[]
+}
+
+model Position {
+  id String @id @default(uuid())
+  name String
+
+  employees Employee[]
+}
+
+model EmployeeStatus {
+  id String @id @default(uuid())
+  name String
+
+  employees Employee[]
+}
+
+model Employee {
+  id String @id @default(uuid())
+  nip String @unique
+  employeeStatusId String?
+  organizationId String?
+  divisionId String?
+  subdivisionId String?
+  gradeId String?
+  positionId String?
+
+  employeeStatus EmployeeStatus? @relation(fields: [employeeStatusId], references: [id], onDelete: SetNull)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  division Division? @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+  subdivision Subdivision? @relation(fields: [subdivisionId], references: [id], onDelete: SetNull)
+  grade Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  position Position? @relation(fields: [positionId], references: [id], onDelete: SetNull)
+}
+
+model User {
+  id String @id @default(cuid())
+  name String?
+  email String? @unique
+  emailVerified DateTime?
+  image String?
+  passwordHash String?
+  role Role @default(USER)
+  isActive Boolean @default(true)
+  accounts Account[]
+  sessions Session[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id String @id @default(cuid())
+  userId String
+  type String
+  provider String
+  providerAccountId String
+  refresh_token String?
+  access_token String?
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id String @id @default(cuid())
+  sessionToken String @unique
+  userId String
+  expires DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token String @unique
+  expires DateTime
+  @@unique([identifier, token])
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  USER
+}
