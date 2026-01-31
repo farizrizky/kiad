@@ -1,6 +1,6 @@
-import { requireAuthOrRedirect } from "@/lib/auth";
+import { RequireAuthOrRedirect } from '@/lib/auth';
 
 export default async function DashboardPage() {
-    
-    return <h1>Dashboard Page</h1>;
+	await RequireAuthOrRedirect();
+	return <h1>Dashboard Page</h1>;
 }

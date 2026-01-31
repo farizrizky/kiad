@@ -1,10 +1,10 @@
-import { OrganizationService } from "@/services/organization.service"; 
-import { NextResponse } from "next/server";
-import { requireAuthOrRedirect } from "@/lib/auth";
+import { OrganizationService } from '@/services/organization.service';
+import { NextResponse } from 'next/server';
+import { RequireAuthOrRedirect } from '@/lib/auth';
 
 export async function GET() {
-    await requireAuthOrRedirect();
+	await RequireAuthOrRedirect();
 
-    const organization = await OrganizationService.list();
-    return NextResponse.json(organization);
+	const organization = await OrganizationService.list();
+	return NextResponse.json(organization);
 }

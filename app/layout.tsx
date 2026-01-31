@@ -1,34 +1,26 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps} from '@mantine/core';
+import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: "KIAD",
-  description: "Aplikasi Administrasi Bengkulu Tengah",
-};
-
-const theme = {
-  primaryColor: 'blue',
-  defaultRadius: 'md',
+	title: 'KIAD',
+	description: 'Aplikasi Administrasi Bengkulu Tengah',
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <MantineProvider 
-          theme={theme}
-        >
-          {children}
-        </MantineProvider>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" {...mantineHtmlProps}>
+			<head>
+				<ColorSchemeScript />
+			</head>
+			<body>
+				<Providers>{children}</Providers>
+			</body>
+		</html>
+	);
 }

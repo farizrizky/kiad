@@ -1,9 +1,7 @@
-import { prisma } from "@/lib/prismaSingleton";
+import { Prisma } from '@/lib/prismaSingleton';
 
 export const OrganizationService = {
-    async list(){
-        return prisma.organization.findMany();
-    },
-
-  
-}
+	async list() {
+		return Prisma.organization.findMany();
+	},
+};
