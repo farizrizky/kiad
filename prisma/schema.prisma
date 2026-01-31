@@ -10,7 +10,12 @@ datasource db {
 
 model Organization {
   id String @id @default(uuid())
-  name String
+  name String  
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  userCreateId String?
+  userUpdateId String?
 
   divisions Division[]
   employees Employee[]
@@ -23,6 +28,11 @@ model Division {
   organizationId String
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
+
   subdivisions Subdivision[]
   employees Employee[]
 }
@@ -34,12 +44,22 @@ model Subdivision {
   divisionId String
   division Division @relation(fields: [divisionId], references: [id], onDelete: Cascade)
 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
+
   employees Employee[]
 }
 
-model Type {
+model ClassType {
   id String @id @default(uuid())
   name String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
 
   grades Grade[]
 }
@@ -48,8 +68,13 @@ model Grade {
   id String @id @default(uuid())
   name String
 
-  typeId String
-  type Type @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  classTypeId String
+  classRype ClassType @relation(fields: [classTypeId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
 
   employees Employee[]
 }
@@ -58,12 +83,22 @@ model Position {
   id String @id @default(uuid())
   name String
 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
+
   employees Employee[]
 }
 
 model EmployeeStatus {
   id String @id @default(uuid())
   name String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
 
   employees Employee[]
 }
@@ -84,10 +119,15 @@ model Employee {
   subdivision Subdivision? @relation(fields: [subdivisionId], references: [id], onDelete: SetNull)
   grade Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)
   position Position? @relation(fields: [positionId], references: [id], onDelete: SetNull)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
 }
 
 model User {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
   name String?
   email String? @unique
   emailVerified DateTime?
@@ -99,10 +139,12 @@ model User {
   sessions Session[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userCreateId String?
+  userUpdateId String?
 }
 
 model Account {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
   userId String
   type String
   provider String
@@ -119,7 +161,7 @@ model Account {
 }
 
 model Session {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
   sessionToken String @unique
   userId String
   expires DateTime
